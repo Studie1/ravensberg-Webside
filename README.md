@@ -39,6 +39,29 @@ All content lives in `src/data/`. The only file that changes regularly is `vorst
 2. Edit `src/data/vorstand.ts`
 3. Push to `main` — deployment is automatic
 
+## Updating Semesterprogramm
+
+Export the new semester PDF and calendar file, then run:
+
+```bash
+bun run import:semester -- \
+  --pdf "/path/to/SemPro.pdf" \
+  --ics "/path/to/Ravensberg.ics" \
+  --slug "sose-2026" \
+  --title "Sommersemester 2026"
+```
+
+Use a new lowercase slug for each semester, for example `wise-2026-27`.
+The import copies the PDF and ICS into `public/semesterprogramm/`, generates a
+cover image, and updates `src/data/semesterprogramm.ts`.
+
+Before pushing, verify the site:
+
+```bash
+bun run lint
+bun run build
+```
+
 ## Deployment
 
 GitHub Actions builds and deploys to Hostinger via FTP on every push to `main`. See `.github/workflows/deploy.yml`.

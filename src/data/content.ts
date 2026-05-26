@@ -50,6 +50,7 @@ export const kontakt = {
 
 export const navigation = [
   { label: "Willkommen", href: "#willkommen" },
+  { label: "Programm", href: "#semesterprogramm" },
   { label: "Kontakt", href: "#kontakt" },
   { label: "Prinzipien", href: "#prinzipien" },
   { label: "Vorstand", href: "#vorstand" },

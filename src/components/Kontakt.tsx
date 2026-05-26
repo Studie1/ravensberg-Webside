@@ -21,7 +21,7 @@ export function Kontakt() {
         <ScrollReveal delay={0.1}>
           <a
             href={`mailto:${siteConfig.email}`}
-            className="group flex items-start gap-4 p-6 rounded-xl bg-muted/60 hover:bg-muted transition-colors"
+            className="group flex items-start gap-4 p-6 rounded-xl bg-muted shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent">
               <svg
@@ -53,7 +53,7 @@ export function Kontakt() {
             href={siteConfig.googleMaps}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-start gap-4 p-6 rounded-xl bg-muted/60 hover:bg-muted transition-colors"
+            className="group flex items-start gap-4 p-6 rounded-xl bg-muted shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent">
               <svg
@@ -85,7 +85,7 @@ export function Kontakt() {
             href={siteConfig.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-start gap-4 p-6 rounded-xl bg-muted/60 hover:bg-muted transition-colors"
+            className="group flex items-start gap-4 p-6 rounded-xl bg-muted shadow-sm hover:shadow-md transition-shadow"
           >
             <div className="flex-shrink-0 w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent">
               <svg

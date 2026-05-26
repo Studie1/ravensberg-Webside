@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "import:semester": "bun scripts/import-semester.ts",
     "start": "next start",
     "lint": "biome lint .",
     "lint:fix": "biome lint --write ."

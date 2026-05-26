@@ -10,6 +10,7 @@ import { Kontakt } from "@/components/Kontakt";
 import { Footer } from "@/components/Footer";
 import { SectionDivider } from "@/components/SectionDivider";
 import { RoomBanner } from "@/components/RoomBanner";
+import { Semesterprogramm } from "@/components/Semesterprogramm";
 import { fetchInstagramPosts } from "@/lib/instagram";
 
 export default async function Home() {
@@ -20,6 +21,8 @@ export default async function Home() {
       <Navigation hasInstagramPosts={posts.length > 0} />
       <Hero />
       <Willkommen />
+      <SectionDivider />
+      <Semesterprogramm />
       <SectionDivider />
       <Kontakt />
       <SectionDivider />

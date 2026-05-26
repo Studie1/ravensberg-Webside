@@ -11,7 +11,7 @@ export function Willkommen() {
   const yearsOfTradition = currentYear - 1919;
 
   return (
-    <Section id="willkommen" bgClassName="bg-muted">
+    <Section id="willkommen">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
         <ScrollReveal>
           <AnimatedHeading className="font-serif text-3xl md:text-4xl text-foreground mb-6">
