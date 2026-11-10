@@ -1,0 +1,69 @@
+name: Build and Deploy (IONOS)
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 5 * * *'  # täglich 5 Uhr UTC (6 Uhr MEZ), wie deploy.yml – hält den Instagram-Feed aktuell
+  workflow_dispatch:      # manueller Start unter Actions → "Run workflow"
+
+# Verhindert, dass sich zwei IONOS-Deploys gegenseitig in die Quere kommen
+concurrency:
+  group: deploy-ionos
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # IONOS-Zugangsdaten (ohne Private Key) auf Job-Ebene,
+    # damit der Upload-Schritt prüfen kann, ob sie gesetzt sind.
+    env:
+      IONOS_SSH_HOST: ${{ secrets.IONOS_SSH_HOST }}
+      IONOS_SSH_USERNAME: ${{ secrets.IONOS_SSH_USERNAME }}
+      IONOS_SSH_PORT: ${{ secrets.IONOS_SSH_PORT }}
+      IONOS_REMOTE_PATH: ${{ secrets.IONOS_REMOTE_PATH }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.13
+
+      - run: bun install --frozen-lockfile
+
+      # Build identisch zu deploy.yml (inkl. Instagram-Feed)
+      - run: bun run build
+        env:
+          INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_TOKEN }}
+
+      - name: Deploy to IONOS via rsync
+        if: env.IONOS_SSH_HOST != ''
+        env:
+          IONOS_SSH_PRIVATE_KEY: ${{ secrets.IONOS_SSH_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+
+          # Schutz: Zielpfad darf nie das Home-/Root-Verzeichnis sein,
+          # sonst würde "--delete" den kompletten Webspace leeren.
+          case "${IONOS_REMOTE_PATH}" in
+            ""|"/"|"."|"./"|"~"|"~/")
+              echo "Ungültiger IONOS_REMOTE_PATH: '${IONOS_REMOTE_PATH}' – Abbruch."
+              exit 1 ;;
+          esac
+
+          PORT="${IONOS_SSH_PORT:-22}"
+
+          # Private Key aus dem Secret in eine Datei schreiben
+          mkdir -p ~/.ssh
+          printf '%s\n' "$IONOS_SSH_PRIVATE_KEY" > ~/.ssh/ionos_key
+          chmod 600 ~/.ssh/ionos_key
+
+          # Server-Fingerprint hinterlegen, damit SSH nicht nachfragt
+          ssh-keyscan -p "$PORT" "$IONOS_SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          # Build-Ordner "out/" in den Zielordner auf IONOS spiegeln
+          rsync -avz --delete \
+            -e "ssh -p $PORT -i ~/.ssh/ionos_key" \
+            out/ "${IONOS_SSH_USERNAME}@${IONOS_SSH_HOST}:${IONOS_REMOTE_PATH%/}/"
